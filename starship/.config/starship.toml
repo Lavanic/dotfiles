@@ -1,6 +1,4 @@
-# ─────────────────────────────────────────────────────────
-#  starship.toml — btop Default palette + user@host
-# ─────────────────────────────────────────────────────────
+# Colors match the btop default theme
 
 format = """
 $username\
@@ -19,21 +17,18 @@ right_format = """$time"""
 
 add_newline = true
 
-# ── Username ─────────────────────────────────────────────
 [username]
 show_always = true
 style_user  = "bold #50f095"
 style_root  = "bold #f05050"
 format      = "[$user]($style)"
 
-# ── Hostname ─────────────────────────────────────────────
 [hostname]
 ssh_only = false
 style    = "bold #5f8787"
 format   = "[@$hostname]($style) "
 trim_at  = ""
 
-# ── Directory ────────────────────────────────────────────
 [directory]
 style             = "bold #f0c050"
 truncation_length = 3
@@ -42,13 +37,11 @@ read_only         = " 󰌾"
 read_only_style   = "#f05050"
 format            = "[$path]($style)[$read_only]($read_only_style) "
 
-# ── Git branch ───────────────────────────────────────────
 [git_branch]
 symbol = " "
 style  = "bold #4897d4"
 format = "[$symbol$branch]($style) "
 
-# ── Git status ───────────────────────────────────────────
 [git_status]
 style      = "#ff5555"
 format     = "([$all_status$ahead_behind]($style) )"
@@ -63,7 +56,6 @@ staged     = "+${count}"
 renamed    = "»${count}"
 deleted    = "✘${count}"
 
-# ── Languages ────────────────────────────────────────────
 [python]
 symbol = " "
 style  = "#f0c050"
@@ -79,20 +71,17 @@ symbol = " "
 style  = "#f05050"
 format = "[$symbol$version]($style) "
 
-# ── Command duration ─────────────────────────────────────
 [cmd_duration]
 min_time = 2_000
 style    = "#bcbcbc"
 format   = "[ $duration]($style) "
 
-# ── Time (right side) ────────────────────────────────────
 [time]
 disabled    = false
 style       = "#5f8787"
 format      = "[$time]($style)"
 time_format = "%H:%M"
 
-# ── Prompt character ─────────────────────────────────────
 [character]
 success_symbol = "[❯](bold #50f095)"
 error_symbol   = "[❯](bold #f05050)"
