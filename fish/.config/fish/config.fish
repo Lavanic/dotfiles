@@ -50,5 +50,4 @@ if status is-interactive
 
 end
 
-# Created by `pipx` on 2026-05-03 04:02:09
-set PATH $PATH /home/oliverohrt/.local/bin
+fish_add_path --global ~/.local/bin
