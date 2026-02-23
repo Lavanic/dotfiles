@@ -21,10 +21,24 @@ Keybindings for pane splits (ctrl+shift+enter and alt+enter), pane
 navigation (ctrl+shift+arrows), pane resizing (alt+arrows), and tabs
 (ctrl+t, ctrl+1 through ctrl+9).
 
+**git**
+Identity, defaults (main as init branch, auto upstream on push, pruned
+fetches, branches sorted by recency), gh as the GitHub credential helper,
+and the global ignore file. Machine-specific settings go in the untracked
+`~/.gitconfig.local`, which is included last so it wins.
+
+**zed** (editor)
+Settings (fonts, One Dark/Light following the system theme, minimap) and a
+keymap tweak: alt+g d opens the project diff from anywhere.
+
+**btop** (system monitor)
+btop.conf. btop rewrites it on exit, so the repo shows a diff now and then;
+commit when it is a change worth keeping.
+
 ## New machine
 
 ```sh
-sudo pacman -S stow fish starship wezterm eza ttf-lilex-nerd   # Arch
+sudo pacman -S stow fish starship wezterm eza ttf-lilex-nerd git github-cli zed btop   # Arch
 git clone https://github.com/Lavanic/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
