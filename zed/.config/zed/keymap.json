@@ -1,0 +1,14 @@
+// Zed keymap
+//
+// Default keymap for reference: run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      // Open the Project Diff from anywhere, not just the Git panel.
+      // Sits next to Zed's own alt-g b (blame) and alt-g m (modified files).
+      "alt-g d": "git::Diff"
+    }
+  }
+]
