@@ -1,0 +1,36 @@
+[user]
+	name = Lavanic
+	email = oliver@theohrts.com
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[branch]
+	sort = -committerdate
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[sendemail]
+	smtpServer = smtp.bizmail.yahoo.com
+	smtpServerPort = 465
+	smtpEncryption = ssl
+	smtpUser = oliver@theohrts.com
+	from = Oliver Ohrt <oliver@theohrts.com>
+	confirm = always
+
+# Machine-specific settings live in the untracked ~/.gitconfig.local.
+# Included last so local values win.
+[include]
+	path = ~/.gitconfig.local
