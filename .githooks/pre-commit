@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Secret scan on every commit. The repo is public; fail closed on findings.
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+    echo "pre-commit: gitleaks not installed (sudo pacman -S gitleaks); skipping secret scan" >&2
+    exit 0
+fi
+
+if gitleaks git -h >/dev/null 2>&1; then
+    gitleaks git --staged --redact --no-banner
+else
+    gitleaks protect --staged --redact
+fi
+rc=$?
+
+if [ $rc -ne 0 ]; then
+    echo "pre-commit: possible secret in staged changes; commit blocked" >&2
+    exit 1
+fi
+exit 0
