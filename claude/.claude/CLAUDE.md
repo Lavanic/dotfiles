@@ -19,6 +19,15 @@
 - Dotfiles live at ~/dotfiles as GNU Stow packages. New tool configs get
   added there as a package, not left loose in ~/.config.
 
+## Dotfiles
+- ~/dotfiles (public repo, GNU Stow) owns every config it tracks; live files
+  are symlinks into it. Edit the repo file, never a detached copy.
+- Standing instruction: when work leaves changes in ~/dotfiles, run the
+  dotfiles-sync skill and push to origin main without asking.
+- New tool configs become stow packages there (the skill covers how).
+- Never bypass the pre-commit secret scan. If it blocks, stop and tell me.
+- Theming follows the otop palette (otop.md at the repo root).
+
 ## Continuous improvement
 - When I correct you the same way a second time, propose a new line for this
   file in your reply.

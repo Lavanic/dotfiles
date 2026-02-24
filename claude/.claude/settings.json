@@ -16,6 +16,56 @@
   "tui": "fullscreen",
   "switchModelsOnFlag": false,
   "permissions": {
-    "allow": []
+    "allow": [
+      "Edit(~/dotfiles/**)",
+      "Bash(git -C /home/oliverohrt/dotfiles status*)",
+      "Bash(git -C /home/oliverohrt/dotfiles diff*)",
+      "Bash(git -C /home/oliverohrt/dotfiles log*)",
+      "Bash(git -C /home/oliverohrt/dotfiles add *)",
+      "Bash(git -C /home/oliverohrt/dotfiles commit -m *)",
+      "Bash(git -C /home/oliverohrt/dotfiles push origin main)",
+      "Bash(stow -d /home/oliverohrt/dotfiles *)",
+      "Bash(gitleaks *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/dotfiles-check.sh\" session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/dotfiles-check.sh\" stop",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/notify.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
