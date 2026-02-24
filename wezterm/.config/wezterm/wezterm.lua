@@ -8,7 +8,7 @@ config.font = wezterm.font_with_fallback({
 })
 config.font_size = 12.0
 
--- Colors matched to the btop default theme
+-- otop palette (see otop.md at the repo root)
 config.colors = {
   foreground    = "#ffffff",
   background    = "#000000",
@@ -22,22 +22,22 @@ config.colors = {
 
   ansi = {
     "#000000",  -- black
-    "#f05050",  -- red (btop cpu_end)
-    "#50f095",  -- green (btop cpu_start)
-    "#f0c050",  -- yellow (btop cpu_mid)
-    "#4897d4",  -- blue (btop temp_start)
-    "#ff40b6",  -- magenta (btop temp_end)
-    "#5f8787",  -- cyan (btop cpu_box)
-    "#bcbcbc",  -- white (btop graph_text)
+    "#f05050",  -- red
+    "#50f095",  -- green
+    "#f0c050",  -- yellow
+    "#4897d4",  -- blue
+    "#ff40b6",  -- magenta
+    "#5f8787",  -- cyan (teal)
+    "#bcbcbc",  -- white (text)
   },
 
   brights = {
-    "#555555",  -- bright black (btop meter_bg)
-    "#ff5555",  -- bright red (btop hi_fg)
-    "#90ff90",  -- bright green (btop free_end)
-    "#ffe080",  -- bright yellow (btop available_end)
-    "#8080ff",  -- bright blue (btop download_end)
-    "#ff80ff",  -- bright magenta (btop upload_end)
+    "#555555",  -- bright black (grey)
+    "#ff5555",  -- bright red
+    "#90ff90",  -- bright green
+    "#ffe080",  -- bright yellow
+    "#8080ff",  -- bright blue
+    "#ff80ff",  -- bright magenta
     "#87afaf",  -- bright cyan
     "#ffffff",  -- bright white
   },

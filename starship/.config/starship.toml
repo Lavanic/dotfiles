@@ -1,4 +1,4 @@
-# Colors match the btop default theme
+# otop palette (see otop.md at the repo root)
 
 format = """
 $username\
@@ -17,33 +17,44 @@ right_format = """$time"""
 
 add_newline = true
 
+palette = "otop"
+
+[palettes.otop]
+red     = "#f05050"
+green   = "#50f095"
+yellow  = "#f0c050"
+blue    = "#4897d4"
+magenta = "#ff40b6"
+teal    = "#5f8787"
+text    = "#bcbcbc"
+
 [username]
 show_always = true
-style_user  = "bold #50f095"
-style_root  = "bold #f05050"
+style_user  = "bold green"
+style_root  = "bold red"
 format      = "[$user]($style)"
 
 [hostname]
 ssh_only = false
-style    = "bold #5f8787"
+style    = "bold teal"
 format   = "[@$hostname]($style) "
 trim_at  = ""
 
 [directory]
-style             = "bold #f0c050"
+style             = "bold yellow"
 truncation_length = 3
 truncate_to_repo  = true
 read_only         = " 󰌾"
-read_only_style   = "#f05050"
+read_only_style   = "red"
 format            = "[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
 symbol = " "
-style  = "bold #4897d4"
+style  = "bold blue"
 format = "[$symbol$branch]($style) "
 
 [git_status]
-style      = "#ff5555"
+style      = "red"
 format     = "([$all_status$ahead_behind]($style) )"
 conflicted = "⚡"
 ahead      = "⇡${count}"
@@ -58,31 +69,31 @@ deleted    = "✘${count}"
 
 [python]
 symbol = " "
-style  = "#f0c050"
+style  = "yellow"
 format = "[$symbol$version]($style) "
 
 [nodejs]
 symbol = " "
-style  = "#50f095"
+style  = "green"
 format = "[$symbol$version]($style) "
 
 [rust]
 symbol = " "
-style  = "#f05050"
+style  = "red"
 format = "[$symbol$version]($style) "
 
 [cmd_duration]
 min_time = 2_000
-style    = "#bcbcbc"
+style    = "text"
 format   = "[ $duration]($style) "
 
 [time]
 disabled    = false
-style       = "#5f8787"
+style       = "teal"
 format      = "[$time]($style)"
 time_format = "%H:%M"
 
 [character]
-success_symbol = "[❯](bold #50f095)"
-error_symbol   = "[❯](bold #f05050)"
-vimcmd_symbol  = "[❮](bold #f0c050)"
+success_symbol = "[❯](bold green)"
+error_symbol   = "[❯](bold red)"
+vimcmd_symbol  = "[❮](bold yellow)"
