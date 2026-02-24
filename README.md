@@ -1,6 +1,7 @@
 # dotfiles
 
 Configs for my Linux machines, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Everything is themed with the [otop palette](otop.md).
 
 ## What's in here
 
@@ -32,8 +33,15 @@ Settings (fonts, One Dark/Light following the system theme, minimap) and a
 keymap tweak: alt+g d opens the project diff from anywhere.
 
 **btop** (system monitor)
-btop.conf. btop rewrites it on exit, so the repo shows a diff now and then;
-commit when it is a change worth keeping.
+btop.conf and the otop theme. btop rewrites its conf on exit, so the repo
+shows a diff now and then; commit when it is a change worth keeping.
+
+**claude** (Claude Code)
+Global CLAUDE.md, settings.json with permissions scoped so Claude can commit
+and push this repo on its own, hooks that notice uncommitted dotfiles
+changes, a desktop notification hook, and a dotfiles-sync skill. A gitleaks
+pre-commit hook guards against committing secrets (sudo pacman -S gitleaks).
+Machine-local permission grants stay in untracked settings.local.json.
 
 ## New machine
 
