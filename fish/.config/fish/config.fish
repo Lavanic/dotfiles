@@ -2,6 +2,10 @@ if status is-interactive
 
     starship init fish | source
 
+    if command -q zoxide
+        zoxide init fish | source
+    end
+
     set -gx EDITOR nvim
     set -gx VISUAL nvim
 
