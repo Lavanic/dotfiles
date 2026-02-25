@@ -40,6 +40,24 @@ offers it.
 To theme a new tool: try its ANSI/terminal-colors mode first; otherwise copy
 hexes from the table.
 
+## Muted companions
+
+For large text areas (editor syntax, long prose) the full-strength palette
+is too loud. These are the quiet versions, taken from btop's real Default
+theme, for use alongside the accents above:
+
+| Role        | Hex       |
+| ----------- | --------- |
+| body text   | `#cccccc` |
+| quiet green | `#77ca9b` |
+| quiet yellow| `#cbc06c` |
+| quiet red   | `#d9626d` |
+| light cyan  | `#74e6fc` |
+| line/border | `#303030` |
+
+Rule of thumb: neon for small accents (cursors, status, diffs, terminal),
+muted for anything that fills the screen.
+
 ## For the record: real btop Default values
 
 Where otop deliberately differs from btop's actual source
