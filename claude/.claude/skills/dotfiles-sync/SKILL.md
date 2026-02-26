@@ -24,7 +24,10 @@ are stow symlinks into it.
 4. Push with `git -C /home/oliverohrt/dotfiles push origin main`. Never
    force-push. If the push is rejected, stop and report; don't resolve
    silently.
-5. btop rewrites btop.conf on exit. If the only diff is btop runtime noise
+5. A commit that adds a new file to an existing package needs a restow
+   (`stow -d /home/oliverohrt/dotfiles -t /home/oliverohrt --restow <pkg>`)
+   or the live symlink never gets created. Verify with readlink.
+6. btop rewrites btop.conf on exit. If the only diff is btop runtime noise
    (graph selections and the like), commit it as `chore(btop): config drift`
    or leave it and say so.
 

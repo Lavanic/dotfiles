@@ -4,6 +4,9 @@
 - Conventional commits: feat, fix, chore, docs, refactor.
 - Never add co-author or AI attribution lines to commits or PRs.
 - Don't push unless I ask or the task is explicitly about syncing a repo.
+- Commit messages read like I typed them: terse, concrete, about the
+  change itself. Never meta-commentary like "make it more human" or
+  "improve wording"; say what changed ("trim the readme").
 
 ## Writing and code style
 - No em dashes in prose or docs you write for me.
