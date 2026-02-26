@@ -8,7 +8,8 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "auto_install_extensions": {
-    "astro": true
+    "astro": true,
+    "lua": true
   },
   "minimap": {
     "show": "always"
