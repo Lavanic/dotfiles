@@ -15,6 +15,11 @@
   },
   "tui": "fullscreen",
   "switchModelsOnFlag": false,
+  "statusLine": {
+    "type": "command",
+    "command": "python3 \"$HOME/.claude/statusline.py\"",
+    "padding": 0
+  },
   "permissions": {
     "allow": [
       "Edit(~/dotfiles/**)",
