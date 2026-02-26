@@ -12,6 +12,7 @@
 !/zed/
 !/btop/
 !/claude/
+!/neofetch/
 
 # Runtime and machine-local files, anywhere in the tree
 fish_variables
