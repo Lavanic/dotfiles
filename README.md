@@ -1,31 +1,31 @@
 # dotfiles
 
-<img align="right" width="545" src=".github/preview.png">
+<table>
+<tr>
+<td valign="top">
 
-**OS** · EndeavourOS (Arch)
+| **OS** | EndeavourOS (Arch) |
+| --- | --- |
+| **DE** | KDE Plasma (Wayland) |
+| **Shell** | fish |
+| **Prompt** | starship |
+| **Terminal** | WezTerm |
+| **Editor** | Zed |
+| **Monitor** | btop |
+| **Fetch** | neofetch |
+| **Font** | Lilex Nerd Font |
 
-**DE** · KDE Plasma (Wayland)
+</td>
+<td valign="top">
+<img width="545" src=".github/preview.png">
+</td>
+</tr>
+</table>
 
-**Shell** · fish
-
-**Prompt** · starship
-
-**Terminal** · WezTerm
-
-**Editor** · Zed
-
-**Monitor** · btop
-
-**Fetch** · neofetch
-
-**Font** · Lilex Nerd Font
-
-<br clear="right">
-
-daily setup is fish inside wezterm. wezterm has real splits and tabs built
+daily setup is fish shell inside wezterm. wezterm has real splits and tabs built
 in so I never ended up needing tmux, and starship handles the prompt and
-mostly shuts up unless git has something to say. zoxide is the newest
-addition but already the one I'd miss most, `z dot` beats typing paths.
+mostly does nada unless git has something to say. zoxide is the newest
+addition and I'm a big fan of, `z dot` beats typing paths manually.
 the colors started as me trying to copy btop's default theme into my
 terminal, I got them wrong in a brighter direction and liked it better, so
 now it's its own palette ([otop](otop.md)) and even btop runs it through a
