@@ -2,6 +2,7 @@
 /*
 !/.gitignore
 !/.githooks/
+!/.github/
 !/README.md
 !/install.sh
 !/otop.md

@@ -1,9 +1,11 @@
 # dotfiles
 
+<img align="right" width="615" src=".github/preview.png">
+
 | | |
 | --- | --- |
 | **OS** | EndeavourOS (Arch) |
-| **DE / compositor** | KDE Plasma / kwin (Wayland) |
+| **DE / WM** | KDE Plasma (Wayland) |
 | **Shell** | fish |
 | **Prompt** | starship |
 | **Terminal** | WezTerm |
@@ -11,6 +13,8 @@
 | **Monitor** | btop |
 | **Fetch** | neofetch |
 | **Font** | Lilex Nerd Font |
+
+<br clear="right">
 
 daily setup is fish inside wezterm. wezterm has real splits and tabs built
 in so I never ended up needing tmux, and starship handles the prompt and
