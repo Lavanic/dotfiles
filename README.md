@@ -48,3 +48,11 @@ If a real config already exists, stow refuses to overwrite it: move it away
 or `stow --adopt --target="$HOME" <pkg>` and diff. Machine-local settings
 stay untracked (`~/.gitconfig.local`, `~/.claude/settings.local.json`), and
 no ssh, keys, or shell history live here.
+
+The grub theme is the one thing stow can't place (root-owned):
+
+```sh
+sudo cp -r system/grub/themes/valhalla /usr/share/grub/themes/
+# set GRUB_THEME="/usr/share/grub/themes/valhalla/theme.txt" in /etc/default/grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+```

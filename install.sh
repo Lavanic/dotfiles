@@ -24,6 +24,8 @@ git config core.hooksPath .githooks
 packages=("$@")
 if [ ${#packages[@]} -eq 0 ]; then
     for dir in */; do
+        # system/ holds root-owned files (grub theme), installed manually
+        [ "$dir" = "system/" ] && continue
         packages+=("${dir%/}")
     done
 fi
