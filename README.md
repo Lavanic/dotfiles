@@ -2,16 +2,23 @@
 
 <img align="right" width="545" src=".github/preview.png">
 
-| **OS** | EndeavourOS (Arch) |
-| --- | --- |
-| **DE** | KDE Plasma (Wayland) |
-| **Shell** | fish |
-| **Prompt** | starship |
-| **Terminal** | WezTerm |
-| **Editor** | Zed |
-| **Monitor** | btop |
-| **Fetch** | neofetch |
-| **Font** | Lilex Nerd Font |
+**OS** · EndeavourOS (Arch)
+
+**DE** · KDE Plasma (Wayland)
+
+**Shell** · fish
+
+**Prompt** · starship
+
+**Terminal** · WezTerm
+
+**Editor** · Zed
+
+**Monitor** · btop
+
+**Fetch** · neofetch
+
+**Font** · Lilex Nerd Font
 
 <br clear="right">
 
