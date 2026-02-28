@@ -1,11 +1,10 @@
 # dotfiles
 
-<img align="right" width="615" src=".github/preview.png">
+<img align="right" width="545" src=".github/preview.png">
 
-| | |
-| --- | --- |
 | **OS** | EndeavourOS (Arch) |
-| **DE / WM** | KDE Plasma (Wayland) |
+| --- | --- |
+| **DE** | KDE Plasma (Wayland) |
 | **Shell** | fish |
 | **Prompt** | starship |
 | **Terminal** | WezTerm |
