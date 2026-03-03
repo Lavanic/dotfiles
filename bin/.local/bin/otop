@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Print the otop palette (canonical definition: ~/dotfiles/otop.md)
+
+row() {
+    local h=${1#\#}
+    local r=$((16#${h:0:2})) g=$((16#${h:2:2})) b=$((16#${h:4:2}))
+    printf '  \e[48;2;%d;%d;%dm      \e[0m  %-16s #%s\n' "$r" "$g" "$b" "$2" "$h"
+}
+
+echo
+echo "  otop"
+echo
+row "#000000" "black"
+row "#f05050" "red"
+row "#50f095" "green"
+row "#f0c050" "yellow"
+row "#4897d4" "blue"
+row "#ff40b6" "magenta"
+row "#5f8787" "teal"
+row "#bcbcbc" "text"
+row "#555555" "grey"
+row "#ff5555" "bright red"
+row "#90ff90" "bright green"
+row "#ffe080" "bright yellow"
+row "#8080ff" "bright blue"
+row "#ff80ff" "bright magenta"
+row "#87afaf" "bright teal"
+row "#ffffff" "white"
+echo
+echo "  muted (large text areas)"
+echo
+row "#cccccc" "body text"
+row "#77ca9b" "quiet green"
+row "#cbc06c" "quiet yellow"
+row "#d9626d" "quiet red"
+row "#74e6fc" "light cyan"
+row "#303030" "line"
+echo
