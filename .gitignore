@@ -15,6 +15,11 @@
 !/claude/
 !/neofetch/
 !/system/
+!/bin/
+!/packages.txt
+
+# machine-local files
+local.fish
 
 # Runtime and machine-local files, anywhere in the tree
 fish_variables

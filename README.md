@@ -36,10 +36,10 @@ everything is a GNU Stow package mirroring `$HOME`.
 ## Setup
 
 ```sh
-sudo pacman -S stow fish starship wezterm zed btop eza zoxide git github-cli gitleaks ttf-lilex-nerd
-yay -S neofetch
+sudo pacman -S git stow
 git clone https://github.com/Lavanic/dotfiles.git ~/dotfiles
-cd ~/dotfiles && ./install.sh
+cd ~/dotfiles && ./install.sh --packages   # see packages.txt, then stows everything
+yay -S neofetch   # AUR
 ```
 
 If a real config already exists, stow refuses to overwrite it: move it away

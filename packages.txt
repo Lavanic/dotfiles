@@ -1,0 +1,15 @@
+# installed by ./install.sh --packages (official repos)
+# AUR extras, install with yay: neofetch
+
+stow            # symlinks this repo into $HOME
+git
+github-cli      # gh, doubles as the git credential helper
+fish            # shell
+starship        # prompt
+wezterm         # terminal
+zed             # editor
+btop            # system monitor
+eza             # ls with icons
+zoxide          # smarter cd
+gitleaks        # pre-commit secret scan
+ttf-lilex-nerd  # the font everything uses
