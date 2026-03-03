@@ -55,3 +55,8 @@ if status is-interactive
 end
 
 fish_add_path --global ~/.local/bin
+
+# machine-local config, untracked (like ~/.gitconfig.local)
+if test -f ~/.config/fish/local.fish
+    source ~/.config/fish/local.fish
+end
