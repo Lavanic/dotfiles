@@ -1,24 +1,8 @@
 # dotfiles
 
-<img align="right" width="545" src=".github/preview.png">
-
-<kbd>OS</kbd> EndeavourOS (Arch)
-
-<kbd>DE</kbd> KDE Plasma (Wayland)
-
-<kbd>Shell</kbd> fish
-
-<kbd>Prompt</kbd> starship
-
-<kbd>Terminal</kbd> WezTerm
-
-<kbd>Editor</kbd> Zed
-
-<kbd>Fetch</kbd> neofetch
-
-<kbd>Font</kbd> Lilex Nerd Font
-
-<br clear="right">
+<p align="center">
+<img width="280" alt="OS EndeavourOS, KDE Plasma on Wayland, fish, starship, WezTerm, Zed, neofetch, Lilex Nerd Font" src=".github/specs.svg"><img width="535" alt="desktop preview" src=".github/preview.png">
+</p>
 
 daily setup is fish shell inside wezterm. wezterm has real splits and tabs built
 in so I never ended up needing tmux, and starship handles the prompt and
