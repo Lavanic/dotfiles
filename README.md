@@ -1,7 +1,7 @@
 # dotfiles
 
 <p align="center">
-<img width="280" alt="OS EndeavourOS, KDE Plasma on Wayland, fish, starship, WezTerm, Zed, neofetch, Lilex Nerd Font" src=".github/specs.svg"><img width="535" alt="desktop preview" src=".github/preview.png">
+<picture><source media="(prefers-color-scheme: dark)" srcset=".github/specs-dark.svg"><img width="280" alt="OS EndeavourOS, KDE Plasma on Wayland, fish, starship, WezTerm, Zed, neofetch, Lilex Nerd Font" src=".github/specs.svg"></picture><img width="535" alt="desktop preview" src=".github/preview.png">
 </p>
 
 daily setup is fish shell inside wezterm. wezterm has real splits and tabs built
