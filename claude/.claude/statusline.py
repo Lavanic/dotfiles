@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Claude Code statusline: dir, git branch, model, context %, session cost."""
+"""Claude Code statusline: dir, branch, model, context %, usage limits, cost."""
 import json
 import os
 import subprocess
@@ -11,7 +11,11 @@ def paint(hexcolor, text):
     return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
 
 
-def context_pct(path, model_id):
+def pct_color(pct):
+    return "50f095" if pct < 50 else "f0c050" if pct < 80 else "f05050"
+
+
+def context_pct_fallback(path, model_id):
     if not path or not os.path.isfile(path):
         return None
     try:
@@ -59,10 +63,17 @@ def main():
 
     parts.append(paint("5f8787", model.get("display_name") or "?"))
 
-    pct = context_pct(data.get("transcript_path"), model.get("id") or "")
-    if pct is not None:
-        color = "50f095" if pct < 50 else "f0c050" if pct < 80 else "f05050"
-        parts.append(paint(color, f"ctx {pct:.0f}%"))
+    ctx = (data.get("context_window") or {}).get("used_percentage")
+    if ctx is None:
+        ctx = context_pct_fallback(data.get("transcript_path"), model.get("id") or "")
+    if isinstance(ctx, (int, float)):
+        parts.append(paint(pct_color(ctx), f"ctx {ctx:.0f}%"))
+
+    limits = data.get("rate_limits") or {}
+    for key, label in (("five_hour", "5h"), ("seven_day", "wk")):
+        pct = (limits.get(key) or {}).get("used_percentage")
+        if isinstance(pct, (int, float)):
+            parts.append(paint(pct_color(pct), f"{label} {pct:.0f}%"))
 
     usd = cost.get("total_cost_usd")
     duration_ms = cost.get("total_duration_ms") or 0
