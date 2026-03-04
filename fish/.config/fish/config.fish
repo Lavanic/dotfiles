@@ -6,6 +6,14 @@ if status is-interactive
         zoxide init fish | source
     end
 
+    if command -q fzf
+        set -gx FZF_DEFAULT_OPTS "--height 60% --layout=reverse --border \
+--color=fg:#bcbcbc,bg:-1,hl:#f0c050 --color=fg+:#ffffff,bg+:#111111,hl+:#ffe080 \
+--color=info:#5f8787,prompt:#50f095,pointer:#f05050 \
+--color=marker:#50f095,spinner:#4897d4,header:#4897d4,border:#5f8787"
+        set -g fzf_preview_dir_cmd eza --all --color=always --icons
+    end
+
     set -gx EDITOR nvim
     set -gx VISUAL nvim
 

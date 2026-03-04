@@ -44,3 +44,8 @@ if [ ${#packages[@]} -eq 0 ]; then
 fi
 
 stow --restow --target="$HOME" --verbose "${packages[@]}"
+
+# Install fish plugins listed in fish_plugins
+if command -v fish >/dev/null 2>&1; then
+    fish -c 'type -q fisher; and fisher update' || true
+fi
