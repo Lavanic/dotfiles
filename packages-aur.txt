@@ -1,0 +1,2 @@
+# AUR, installed with paru by ./install.sh --packages
+neofetch        # fetch with the calico ascii

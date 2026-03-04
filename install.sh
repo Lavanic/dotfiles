@@ -9,6 +9,13 @@ cd "$(dirname "$0")"
 if [ "${1:-}" = "--packages" ]; then
     shift
     sed 's/#.*//; s/[[:space:]]*$//' packages.txt | grep -v '^$' | sudo pacman -S --needed -
+    if ! command -v paru >/dev/null 2>&1; then
+        tmp=$(mktemp -d)
+        git clone --depth 1 https://aur.archlinux.org/paru-bin.git "$tmp/paru-bin"
+        (cd "$tmp/paru-bin" && makepkg -si)
+        rm -rf "$tmp"
+    fi
+    sed 's/#.*//; s/[[:space:]]*$//' packages-aur.txt | grep -v '^$' | paru -S --needed -
 fi
 
 if ! command -v stow >/dev/null 2>&1; then

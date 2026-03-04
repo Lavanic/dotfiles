@@ -22,8 +22,7 @@ everything is a GNU Stow package mirroring `$HOME`.
 ```sh
 sudo pacman -S git stow
 git clone https://github.com/Lavanic/dotfiles.git ~/dotfiles
-cd ~/dotfiles && ./install.sh --packages   # see packages.txt, then stows everything
-yay -S neofetch   # AUR
+cd ~/dotfiles && ./install.sh --packages   # pacman list, paru bootstrap, AUR list, then stows
 ```
 
 If a real config already exists, stow refuses to overwrite it: move it away

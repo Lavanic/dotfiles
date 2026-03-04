@@ -17,6 +17,7 @@
 !/system/
 !/bin/
 !/packages.txt
+!/packages-aur.txt
 
 # machine-local files
 local.fish

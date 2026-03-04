@@ -1,7 +1,9 @@
 # installed by ./install.sh --packages (official repos)
-# AUR extras, install with yay: neofetch
+# AUR packages live in packages-aur.txt, installed with paru
 
 stow            # symlinks this repo into $HOME
+base-devel      # makepkg, needed to bootstrap paru
+fisher          # fish plugin manager (fzf.fish)
 git
 github-cli      # gh, doubles as the git credential helper
 fish            # shell
