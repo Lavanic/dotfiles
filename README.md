@@ -40,15 +40,4 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 ## Keys
 
-| keys | action |
-| --- | --- |
-| `ctrl+shift+enter` / `alt+enter` | split pane right / down |
-| `ctrl+shift+arrows` | move between panes |
-| `alt+arrows` | resize pane |
-| `ctrl+shift+q` / `ctrl+w` | close pane / tab |
-| `ctrl+t`, `ctrl+1..9` | new tab, jump to tab |
-| `ctrl+f` | search scrollback |
-| `ctrl+shift+c` / `ctrl+shift+v` | copy / paste |
-| `F11` | fullscreen |
-| `ctrl+r` | fuzzy history search (fish) |
-| `ctrl+alt+f` | fuzzy file finder (fish) |
+<picture><source media="(prefers-color-scheme: dark)" srcset=".github/keys-dark.svg"><img width="100%" alt="wezterm and fish keybindings" src=".github/keys.svg"></picture>
