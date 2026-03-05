@@ -38,6 +38,6 @@ sudo cp -r system/grub/themes/valhalla /usr/share/grub/themes/
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-## Keys
+## My Keybinds
 
 <picture><source media="(prefers-color-scheme: dark)" srcset=".github/keys-dark.svg"><img width="100%" alt="wezterm and fish keybindings" src=".github/keys.svg"></picture>
