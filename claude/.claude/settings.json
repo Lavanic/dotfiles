@@ -5,21 +5,6 @@
     "pr": "",
     "sessionUrl": false
   },
-  "model": "claude-fable-5",
-  "feedbackDrafts": "off",
-  "effortLevel": "xhigh",
-  "modelSettings": {
-    "claude-opus-5-5": {
-      "effortLevel": "xhigh"
-    }
-  },
-  "tui": "fullscreen",
-  "switchModelsOnFlag": false,
-  "statusLine": {
-    "type": "command",
-    "command": "python3 \"$HOME/.claude/statusline.py\"",
-    "padding": 0
-  },
   "permissions": {
     "allow": [
       "Edit(~/dotfiles/**)",
@@ -37,6 +22,7 @@
       "Bash(git push -f*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "SessionStart": [
       {
@@ -72,5 +58,19 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "python3 \"$HOME/.claude/statusline.py\"",
+    "padding": 0
+  },
+  "feedbackDrafts": "off",
+  "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    }
+  },
+  "tui": "fullscreen",
+  "switchModelsOnFlag": false
 }
