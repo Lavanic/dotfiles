@@ -70,9 +70,11 @@ def main():
         parts.append(paint(pct_color(ctx), f"ctx {ctx:.0f}%"))
 
     limits = data.get("rate_limits") or {}
-    for key, label in (("five_hour", "5h"), ("seven_day", "wk")):
-        pct = (limits.get(key) or {}).get("used_percentage")
+    labels = {"five_hour": "5h", "seven_day": "wk"}
+    for key, entry in limits.items():
+        pct = (entry or {}).get("used_percentage")
         if isinstance(pct, (int, float)):
+            label = labels.get(key) or key.replace("seven_day_", "wk ").replace("five_hour_", "5h ").replace("_", " ")
             parts.append(paint(pct_color(pct), f"{label} {pct:.0f}%"))
 
     usd = cost.get("total_cost_usd")
