@@ -26,6 +26,7 @@ from pathlib import Path
 from claude_agent_sdk import (
     AssistantMessage,
     ClaudeAgentOptions,
+    CLIJSONDecodeError,
     CLINotFoundError,
     ProcessError,
     ResultError,
@@ -102,6 +103,8 @@ async def run(args: argparse.Namespace, task: str) -> int:
         max_turns=args.max_turns,
         resume=args.resume,
         env={"ANTHROPIC_API_KEY": load_key()},
+        # a screenshot read as base64 runs past the SDK's 1 MB default for a single message
+        max_buffer_size=32 * 1024 * 1024,
     )
 
     code = 1
@@ -134,6 +137,9 @@ async def run(args: argparse.Namespace, task: str) -> int:
         return 1
     except CLINotFoundError:
         print("fable: the SDK could not find its bundled Claude Code; try `uv cache clean claude-agent-sdk`", file=sys.stderr)
+        return 1
+    except CLIJSONDecodeError as e:
+        print(f"fable: could not read a message from Claude Code: {e}", file=sys.stderr)
         return 1
     except ProcessError as e:
         print(f"fable: Claude Code exited with code {e.exit_code}", file=sys.stderr)
