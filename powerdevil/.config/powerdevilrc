@@ -1,0 +1,26 @@
+[AC][Display]
+TurnOffDisplayIdleTimeoutSec=-1
+TurnOffDisplayWhenIdle=false
+
+[AC][RunScript]
+ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@480
+
+[AC][SuspendAndShutdown]
+AutoSuspendAction=0
+LidAction=2
+
+[Battery][Display]
+TurnOffDisplayIdleTimeoutSec=-1
+TurnOffDisplayWhenIdle=false
+
+[Battery][RunScript]
+ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@120
+
+[Battery][SuspendAndShutdown]
+AutoSuspendIdleTimeoutSec=1800
+
+[Inhibitions]
+BlockedInhibitions=org.gnome.Cheese:Webcam in use
+
+[LowBattery][RunScript]
+ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@120
