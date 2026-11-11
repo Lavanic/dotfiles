@@ -29,7 +29,7 @@ fi
 mkdir -p "$HOME/.claude/skills" "$HOME/.local/bin" \
          "$HOME/.config/fish" "$HOME/.config/wezterm" "$HOME/.config/git" \
          "$HOME/.config/zed/themes" "$HOME/.config/btop/themes" \
-         "$HOME/.config/neofetch"
+         "$HOME/.config/neofetch" "$HOME/.config/autostart"
 
 # Repo-local git hooks (pre-commit secret scan)
 git config core.hooksPath .githooks

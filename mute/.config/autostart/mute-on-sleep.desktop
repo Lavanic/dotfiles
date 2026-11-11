@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Mute on sleep
+Exec=/home/oliverohrt/.local/bin/mute-on-sleep
+X-KDE-autostart-phase=2
+NoDisplay=true
