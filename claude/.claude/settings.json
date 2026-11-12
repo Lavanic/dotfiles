@@ -22,7 +22,7 @@
       "Bash(git push -f*)"
     ]
   },
-  "model": "opus",
+  "model": "claude-fable-5-2",
   "hooks": {
     "SessionStart": [
       {
