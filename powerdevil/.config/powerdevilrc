@@ -7,7 +7,6 @@ ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@480
 
 [AC][SuspendAndShutdown]
 AutoSuspendAction=0
-LidAction=2
 
 [Battery][Display]
 TurnOffDisplayIdleTimeoutSec=-1
