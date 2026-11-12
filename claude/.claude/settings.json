@@ -22,7 +22,6 @@
       "Bash(git push -f*)"
     ]
   },
-  "model": "claude-fable-5-2",
   "hooks": {
     "SessionStart": [
       {
