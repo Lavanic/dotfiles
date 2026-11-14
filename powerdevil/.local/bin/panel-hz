@@ -1,0 +1,11 @@
+#!/bin/sh
+# The panel shows up as eDP-1 on the nvidia card or eDP-2 on the intel one,
+# depending on the MUX setting, so look up whichever is connected.
+hz=${1:?usage: panel-hz <hz>}
+for status in /sys/class/drm/card*-eDP-*/status; do
+    [ "$(cat "$status")" = connected ] || continue
+    conn=$(basename "$(dirname "$status")")
+    exec kscreen-doctor "output.${conn#*-}.mode.1920x1200@$hz"
+done
+echo "panel-hz: no connected eDP panel" >&2
+exit 1
