@@ -3,7 +3,7 @@ TurnOffDisplayIdleTimeoutSec=-1
 TurnOffDisplayWhenIdle=false
 
 [AC][RunScript]
-ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@480
+ProfileLoadCommand=/home/oliverohrt/.local/bin/panel-hz 480
 
 [AC][SuspendAndShutdown]
 AutoSuspendAction=0
@@ -13,7 +13,7 @@ TurnOffDisplayIdleTimeoutSec=-1
 TurnOffDisplayWhenIdle=false
 
 [Battery][RunScript]
-ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@120
+ProfileLoadCommand=/home/oliverohrt/.local/bin/panel-hz 120
 
 [Battery][SuspendAndShutdown]
 AutoSuspendIdleTimeoutSec=1800
@@ -22,4 +22,4 @@ AutoSuspendIdleTimeoutSec=1800
 BlockedInhibitions=org.gnome.Cheese:Webcam in use
 
 [LowBattery][RunScript]
-ProfileLoadCommand=kscreen-doctor output.eDP-1.mode.1920x1200@120
+ProfileLoadCommand=/home/oliverohrt/.local/bin/panel-hz 120
