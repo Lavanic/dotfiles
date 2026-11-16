@@ -2,10 +2,20 @@
 # The panel shows up as eDP-1 on the nvidia card or eDP-2 on the intel one,
 # depending on the MUX setting, so look up whichever is connected.
 hz=${1:?usage: panel-hz <hz>}
-for status in /sys/class/drm/card*-eDP-*/status; do
-    [ "$(cat "$status")" = connected ] || continue
-    conn=$(basename "$(dirname "$status")")
-    exec kscreen-doctor "output.${conn#*-}.mode.1920x1200@$hz"
+mode=1920x1200@$hz
+
+# Right after resume kwin can have no outputs yet. kscreen-doctor exits 0
+# anyway, so retry until the panel reports the mode as current.
+tries=0
+while [ "$tries" -lt 15 ]; do
+    for status in /sys/class/drm/card*-eDP-*/status; do
+        [ "$(cat "$status")" = connected ] || continue
+        conn=$(basename "$(dirname "$status")")
+        kscreen-doctor "output.${conn#*-}.mode.$mode" >/dev/null 2>&1
+    done
+    kscreen-doctor -o 2>/dev/null | grep -q "$mode\.[0-9]*\*" && exit 0
+    tries=$((tries + 1))
+    sleep 1
 done
-echo "panel-hz: no connected eDP panel" >&2
+echo "panel-hz: could not set $mode" >&2
 exit 1
