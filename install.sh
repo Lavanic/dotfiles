@@ -33,6 +33,8 @@ mkdir -p "$HOME/.claude/skills" "$HOME/.local/bin" \
 
 # Repo-local git hooks (pre-commit secret scan)
 git config core.hooksPath .githooks
+# /model writes its pick into settings.json; keep that out of commits
+git config filter.claude-settings.clean "python3 .githooks/settings-clean.py"
 
 packages=("$@")
 if [ ${#packages[@]} -eq 0 ]; then
