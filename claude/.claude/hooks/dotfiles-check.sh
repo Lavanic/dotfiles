@@ -16,6 +16,12 @@ if [ "$mode" = stop ]; then
     [ "$active" = "True" ] && exit 0
 fi
 
+# The clean filter drops the model key, but git still flags settings.json when
+# its size changes. Re-adding identical content refreshes the index entry.
+settings=claude/.claude/settings.json
+git -C "$REPO" diff --quiet -- "$settings" 2>/dev/null &&
+    git -C "$REPO" add -- "$settings" 2>/dev/null
+
 status=$(git -C "$REPO" status --porcelain 2>/dev/null) || exit 0
 [ -z "$status" ] && exit 0
 
