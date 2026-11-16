@@ -3,7 +3,7 @@
 ## Git
 - Conventional commits: feat, fix, chore, docs, refactor.
 - Never add co-author or AI attribution lines to commits or PRs.
-- Don't push unless I ask or the task is explicitly about syncing a repo.
+- Don't push unless I ask. ~/dotfiles is the one exception (see Dotfiles).
 - Commit messages read like I typed them: terse, concrete, about the
   change itself. Never meta-commentary like "make it more human" or
   "improve wording"; say what changed ("trim the readme").
@@ -17,8 +17,11 @@
 
 ## Working
 - Don't claim something works until you ran it and saw it pass. Show output.
+- Run the repo's check commands and show the output before saying done, and
+  say what wasn't tested.
 - My machines are Arch-based Linux (KDE, fish, WezTerm, Zed). Use pacman for
-  install instructions and fish syntax for shell config.
+  install instructions, paru for AUR, and fish syntax for shell config.
+- Hooks and scripts you run use bash.
 - Dotfiles live at ~/dotfiles as GNU Stow packages. New tool configs get
   added there as a package, not left loose in ~/.config.
 
