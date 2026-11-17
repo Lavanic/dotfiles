@@ -10,6 +10,7 @@ fish            # shell
 starship        # prompt
 wezterm         # terminal
 zed             # editor
+firefox         # browser
 btop            # system monitor
 eza             # ls with icons
 zoxide          # smarter cd

@@ -29,7 +29,8 @@ fi
 mkdir -p "$HOME/.claude/skills" "$HOME/.local/bin" \
          "$HOME/.config/fish" "$HOME/.config/wezterm" "$HOME/.config/git" \
          "$HOME/.config/zed/themes" "$HOME/.config/btop/themes" \
-         "$HOME/.config/neofetch" "$HOME/.config/autostart"
+         "$HOME/.config/neofetch" "$HOME/.config/autostart" \
+         "$HOME/.config/firefox"
 
 # Repo-local git hooks (pre-commit secret scan)
 git config core.hooksPath .githooks
@@ -46,6 +47,19 @@ if [ ${#packages[@]} -eq 0 ]; then
 fi
 
 stow --restow --target="$HOME" --verbose "${packages[@]}"
+
+# Firefox only reads user.js from its profile dir, whose name is random.
+# Link it into each install's default profile (needs one Firefox launch first).
+if [ -e "$HOME/.config/firefox/user.js" ]; then
+    for base in "$HOME/.mozilla/firefox" "$HOME/.config/mozilla/firefox"; do
+        [ -f "$base/installs.ini" ] || continue
+        while IFS= read -r profile; do
+            if [ -d "$base/$profile" ]; then
+                ln -sfn "$HOME/.config/firefox/user.js" "$base/$profile/user.js"
+            fi
+        done < <(sed -n 's/^Default=//p' "$base/installs.ini")
+    done
+fi
 
 # Install fish plugins listed in fish_plugins
 if command -v fish >/dev/null 2>&1; then
