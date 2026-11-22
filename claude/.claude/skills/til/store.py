@@ -355,7 +355,7 @@ def italics(text):
 
 
 def note_for(card):
-    if card["deck"] == f"TIL::{VOCAB}":
+    if card["deck"] == f"TIL::{VOCAB}" or card.get("example") or card.get("origin"):
         back = rich(card["back"])
         if card.get("example"):
             back += f"<br><br><i>{rich(card['example'])}</i>"

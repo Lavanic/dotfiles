@@ -125,6 +125,13 @@ An "Ex." with numbers beats an abstract statement, and numbers should come
 out round. No em dashes, no "essentially", "powerful", "leverages", no
 summary sentence at the end.
 
+Categories are granular for computing and tech (`iOS`, `Linux`,
+`Networking`, `Cloud Hosting` are all fine as separate ones). Named ideas
+about how people think or behave (Dunning-Kruger effect, temporal
+motivation theory) go in `Mental Models`. Anything else that is a one-off
+outside tech (a medical term, a cooking fact) goes in `Misc`; do not create
+a category for a single stray topic.
+
 Category: reuse one from the list above whenever it fits. Create a new one
 only when nothing fits, name it in Title Case, and set `"flag": "new category"`
 on the item so he sees it (a flagged item in a new category gets
@@ -232,6 +239,14 @@ word:
 - `origin`: two or three sentences of etymology that end on a hook tying the
   root to the meaning ("It's just passing through."). Wrap foreign roots in
   asterisks for italics: `from the Latin *transire*, "to go across"`.
+
+Mental Models cards, and Misc cards that name a concept (Valsalva
+maneuver), use the same four parts: the name on the front, a short
+definition, a plain everyday example, and an origin saying who named or
+described it and when. Keep the example matter-of-fact; no jokes or
+exaggeration ("airline passengers do it during descent", not "half the
+plane does it"). Any card given an `example` or `origin` is stored in this
+format.
 
 Review the cards with the same window: `"title": "Anki cards"`, `label` set
 to `TIL::<Category>`, fields named `Front` and `Back` (for vocabulary add
