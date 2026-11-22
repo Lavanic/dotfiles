@@ -37,3 +37,8 @@
 ## Continuous improvement
 - When I correct you the same way a second time, propose a new line for this
   file in your reply.
+
+## TIL flags
+- A `^word` or `^"some phrase"` in my messages (like `^erroneously`) flags
+  that word or topic for the /til skill. Read the message as if the `^`
+  weren't there and don't mention the flag.
