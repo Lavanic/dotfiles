@@ -1,7 +1,7 @@
 ---
 name: til
-description: Pitch TILs (today-I-learned notes) from this session or the whole day, review them in a small WezTerm window, commit and push the approved ones to the private til repo, then turn them into Anki cards. Use when the user runs /til or /tils, or asks to capture what they learned.
-argument-hint: "[day] [dry]"
+description: Pitch TILs (today-I-learned notes) from everything since the last run, review them in a small WezTerm window, commit and push the approved ones to the private til repo, then turn them into Anki cards. Use when the user runs /til or /tils, or asks to capture what they learned.
+argument-hint: "[dry]"
 ---
 
 # til
@@ -24,10 +24,15 @@ scripts are what make a repeated run safe.
 - `sweep.py REPO`: text of today's Claude Code sessions, and the `^word`
   flags he planted.
 
+There is one mode: every run covers everything since the last run, in every
+session. He runs it whenever he likes, often several times a day, so a run
+with one TIL, or none, is normal. Ignore a `day` argument; it is an old name
+for what is now the default.
+
 If the arguments include `dry`, this is a rehearsal: do the gather, pitch and
 both review rounds for real, pass `--dry` to `store.py save` and
-`store.py cards`, skip `sweep.py --mark` and the flag commands, and show what each would have
-written. `dry` combines with `day`.
+`store.py cards`, skip `sweep.py --mark` and the flag commands, and show
+what each would have written.
 
 ## Current state
 
@@ -35,21 +40,27 @@ written. `dry` combines with `day`.
 
 ## 1. Gather
 
-- No argument: use this conversation. If /til already ran in it, only what
-  came after that run.
-- `day`: run `python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til`
-  and use its output together with this conversation. It prints every Claude
-  Code session since the last sweep (or since midnight).
+Three sources, every run:
 
-He runs this several times a day. Each run only needs to cover what is new
-since the last one; a run with one TIL, or none, is fine.
+1. The sweep. In a fresh `mktemp -d` directory (reuse it for this run's
+   other files), run
+   `python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til > <dir>/sweep.txt`
+   and Read the file. It holds every Claude Code session since the last run
+   (or since midnight if there was none, three days back at most).
+2. This conversation. The sweep reads history from disk and can miss the
+   last turn or two, so also use what you can see here. If /til already ran
+   in this conversation, only what came after that run.
+3. Flags. Run
+   `python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til --flags`.
+   A flag is a word or phrase he prefixed with `^` while talking
+   (`^erroneously`, `^ping`, `^"certificate pinning"`) to say "I want this
+   as a TIL". The output lists each open flag with what he said and what
+   Claude had just said, from every session of the last 90 days on this
+   machine.
 
-In both modes, also run
-`python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til --flags`.
-A flag is a word or phrase he prefixed with `^` while talking
-(`^erroneously`, `^ping`, `^"certificate pinning"`) to say "I want this as a
-TIL". The output lists each open flag with what he said and what Claude had
-just said, from every session of the last 90 days on this machine.
+The sweep is raw history: it can contain passwords, emails and other
+people's details. Read it, never quote it back, and keep all of that out of
+pitches.
 
 Every open flag gets a pitch, built from that context: a flagged English
 word becomes a Vocabulary TIL, a flagged command or topic becomes a TIL
@@ -89,8 +100,9 @@ Do not pitch anything that is already under "Saved TILs" or "Rejected
 before" above, including the same fact in different words. The list shows
 only the most recent ones, so also grep the repo for each candidate's key
 term (`grep -ril "<term>" /home/oliverohrt/Documents/PROJECTS/til --include=*.md`).
-If nothing new is worth saving, say so and stop; an empty run is a normal
-outcome, not a failure.
+If nothing new is worth saving, say so in two or three lines, run
+`sweep.py <repo> --mark` (unless this is a dry run) and stop; an empty run
+is a normal outcome, not a failure.
 
 Write them the way he writes in his journal:
 
@@ -186,9 +198,9 @@ in this review, using each flag's term as `--flags` printed it:
 - `sweep.py <repo> --flags-rejected TERM...` for flags whose pitch he
   rejected. The first rejection keeps the flag open for one more try.
 
-Quote a multi-word term as one argument. For `day` runs also run
-`sweep.py <repo> --mark`. Skip all three after an aborted review or a dry
-run, so nothing is lost.
+Quote a multi-word term as one argument. Then run `sweep.py <repo> --mark`
+so the next run starts from here. Skip all three after an aborted review or
+a dry run, so nothing is lost.
 
 ## 5. Anki cards
 
@@ -207,8 +219,8 @@ word:
 
 - `front`: the word alone, lowercase.
 - `back`: a short definition, a few words, no full sentence.
-- `example`: one sentence using the word, drawn from software or work life
-  ("The bug was transient: it vanished every time he attached a debugger.").
+- `example`: one sentence using the word, about ordinary life ("The pain
+  was transient and gone by morning."), never about tech or his projects.
 - `origin`: two or three sentences of etymology that end on a hook tying the
   root to the meaning ("It's just passing through."). Wrap foreign roots in
   asterisks for italics: `from the Latin *transire*, "to go across"`.
