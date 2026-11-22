@@ -64,10 +64,14 @@ pitches.
 
 Every open flag gets a pitch, built from that context: a flagged English
 word becomes a Vocabulary TIL, a flagged command or topic becomes a TIL
-about how it came up. Fix his spelling of the word in the pitch, but keep
-the flag's own spelling for the commands in step 4. If the context is not
-enough to tell what he meant, pitch your best reading; the review is where
-he corrects it. A flag marked "rejected once already" needs a different
+about how it came up. A flag written as a question, like `^whatisscaleway`,
+`^whatsdkms` or `^definefairplay`, means "explain this": strip the
+`whatis`/`whats`/`define` prefix to get the real topic (`scaleway`, `dkms`,
+`fairplay`) and pitch a TIL explaining it from the surrounding context, not
+a card titled "whatisscaleway". Fix his spelling of the word in the pitch,
+but pass the exact term `--flags` printed (`whatisscaleway` and all) to the
+flag commands in step 4. If the context is not enough to tell what he meant,
+pitch your best reading; the review is where he corrects it. A flag marked "rejected once already" needs a different
 reading than last time. Put `"flag": "flagged"` on these items so he can see
 which pitches came from a flag.
 

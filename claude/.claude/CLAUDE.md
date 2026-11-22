@@ -39,6 +39,8 @@
   file in your reply.
 
 ## TIL flags
-- A `^word` or `^"some phrase"` in my messages (like `^erroneously`) flags
-  that word or topic for the /til skill. Read the message as if the `^`
-  weren't there and don't mention the flag.
+- A `^word` or `^"some phrase"` in my messages (like `^erroneously` or
+  `^whatisscaleway`) flags that word or topic for the /til skill. It is a
+  silent marker, never a request: say nothing about it and don't define it,
+  even when it reads like a question. Answer the rest of the message as if
+  the `^` tokens weren't there.
