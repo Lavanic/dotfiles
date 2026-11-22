@@ -46,7 +46,8 @@ Three sources, every run:
    other files), run
    `python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til > <dir>/sweep.txt`
    and Read the file. It holds every Claude Code session since the last run
-   (or since midnight if there was none, three days back at most).
+   (or since midnight if there was none), up to 30 days back, so a run
+   after a week away still covers the days before he left.
 2. This conversation. The sweep reads history from disk and can miss the
    last turn or two, so also use what you can see here. If /til already ran
    in this conversation, only what came after that run.
@@ -164,7 +165,10 @@ Run `python3 ~/.claude/skills/til/review.py <file>` with a Bash timeout of
   items in a new file and run the review again. After three rounds on the
   same item, drop it and say so.
 - `pending`: he is still deciding. Run again with `--resume` after the file.
-- `aborted` or `closed`: he backed out. Save nothing, say so, stop. If the
+- `closed`: the window was closed without submitting, usually by accident.
+  Run the same command once more; his decisions so far are restored. If it
+  comes back `closed` again, treat it as `aborted`.
+- `aborted`: he backed out. Save nothing, say so, stop. If the
   result still lists every item as `reject`, he disliked the batch: run
   `store.py save` with only the `rejected` list so they are not pitched
   again, and ask what was off.
@@ -257,7 +261,10 @@ with AnkiWeb. Read its JSON:
 - `anki.still_queued` above 0: Anki could not be reached or refused a card;
   `anki.errors` says why. The cards stay queued and go in on the next run.
   Report it, do not retry in a loop.
-- `anki.anki_started: true`: tell him Anki was opened and is still open.
+- `anki.anki_started: true`: the script opened Anki itself and closes it
+  again when done (`anki_closed: true`). Mention it only if `anki_closed`
+  is false, since then Anki is still open. An Anki he had open is never
+  closed.
 - `anki.sync` starting with `conflict` or `error`: relay it once. Never
   resolve a sync conflict yourself.
 

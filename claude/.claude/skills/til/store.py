@@ -23,6 +23,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -311,26 +312,38 @@ def anki_up():
 
 
 def ensure_anki():
-    """Returns (reachable, started_it, problem)."""
+    """Returns (reachable, process we started or None, problem)."""
     if anki_up():
-        return True, False, ""
+        return True, None, ""
     running = subprocess.run(["pgrep", "-x", "anki"], capture_output=True).returncode == 0
-    started = False
+    proc = None
     if not running:
         if not shutil.which("anki"):
-            return False, False, "anki is not installed"
-        subprocess.Popen(["anki"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                         stderr=subprocess.DEVNULL, start_new_session=True)
-        started = True
-    deadline = time.monotonic() + (60 if started else 15)
+            return False, None, "anki is not installed"
+        proc = subprocess.Popen(["anki"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL, start_new_session=True)
+    deadline = time.monotonic() + (60 if proc else 15)
     while time.monotonic() < deadline:
         if anki_up():
             time.sleep(1.5)
-            return True, started, ""
+            return True, proc, ""
+        if proc and proc.poll() is not None:
+            return False, None, "Anki exited right after starting"
         time.sleep(1)
-    why = ("Anki did not finish starting (profile picker or a dialog may be open)" if started
+    why = ("Anki did not finish starting (profile picker or a dialog may be open)" if proc
            else "Anki is open but its MCP add-on is not answering on " + ANKI_URL)
-    return False, started, why
+    return False, proc, why
+
+
+def close_anki(proc):
+    """Ask an Anki we started to quit the normal way (it saves and syncs on
+    exit like a click on the close button). Never touches one he opened."""
+    try:
+        os.killpg(proc.pid, signal.SIGTERM)
+        proc.wait(timeout=90)
+        return True
+    except (OSError, subprocess.TimeoutExpired):
+        return False
 
 
 def rich(text):
@@ -392,10 +405,12 @@ def flush(cards):
     report = {"added": 0, "linked_existing": 0, "still_queued": len(pending), "errors": []}
     if not pending:
         return report
-    up, started, why = ensure_anki()
-    report["anki_started"] = started
+    up, proc, why = ensure_anki()
+    report["anki_started"] = proc is not None
     if not up:
         report["errors"].append(why)
+        if proc:
+            report["anki_closed"] = close_anki(proc)
         return report
 
     by_deck = {}
@@ -438,6 +453,8 @@ def flush(cards):
     report["still_queued"] = sum(c.get("note_id") is None for c in cards)
     if report["added"]:
         report["sync"] = sync_anki()
+    if proc:
+        report["anki_closed"] = close_anki(proc)
     return report
 
 

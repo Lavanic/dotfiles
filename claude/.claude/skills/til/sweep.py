@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Read Claude Code session history for /til.
 
-  sweep.py REPO                       conversation text since the last mark (or midnight)
+  sweep.py REPO                       conversation text since the last mark (or midnight;
+                                      30 days back at most)
   sweep.py REPO --mark                record now as the last sweep
   sweep.py REPO --flags               list open ^word flags
   sweep.py REPO --flags-done TERM...  these flags were pitched and accepted
@@ -23,7 +24,7 @@ import re
 import sys
 
 BUDGET = 80_000
-MAX_AGE = dt.timedelta(days=3)
+MAX_AGE = dt.timedelta(days=30)
 FLAG_AGE = dt.timedelta(days=90)
 REJECTIONS_TO_CLOSE = 2
 
@@ -152,13 +153,19 @@ def cmd_flags(repo):
     if not flags:
         print("No open flags.")
         return
-    for slot in sorted(flags.values(), key=lambda s: s["uses"][0]["when"]):
-        again = "  (rejected once already: pitch a different reading)" if slot["rejections"] else ""
-        print(f"- ^{slot['term']}{again}")
-        for use in sorted(slot["uses"], key=lambda u: u["when"])[-2:]:
-            print(f"    {use['when'].astimezone():%b %d %H:%M} he said: {use['said']}")
-            if use["claude_before"]:
-                print(f"      Claude just before: {use['claude_before']}")
+    by_message = {}
+    for slot in flags.values():
+        use = max(slot["uses"], key=lambda u: u["when"])
+        again = " (rejected once already: pitch a different reading)" if slot["rejections"] else ""
+        group = by_message.setdefault((use["when"], use["said"]), {"use": use, "terms": []})
+        group["terms"].append(f"^{slot['term']}{again}")
+    print(f"{len(flags)} open flags.")
+    for (when, _), group in sorted(by_message.items()):
+        use = group["use"]
+        print(f"\n{when.astimezone():%b %d %H:%M}  " + "  ".join(group["terms"]))
+        print(f"    he said: {use['said']}")
+        if use["claude_before"]:
+            print(f"    Claude just before: {use['claude_before']}")
 
 
 def cmd_close(repo, terms, rejected):
@@ -230,14 +237,16 @@ def render(sessions, cap):
 def cmd_sweep(repo):
     start = since(repo)
     sessions = collect(start)
-    print(f"# sessions since {start.astimezone():%a %b %d %H:%M}: {len(sessions)}")
+    days = (dt.datetime.now(dt.timezone.utc) - start).days
+    gap = f" ({days} days of history)" if days >= 2 else ""
+    print(f"# sessions since {start.astimezone():%a %b %d %H:%M}: {len(sessions)}{gap}")
     body = ""
     for cap in (2000, 1000, 500, 250):
         body = render(sessions, cap)
         if len(body) <= BUDGET:
             break
     if len(body) > BUDGET:
-        print("[older turns dropped to fit]")
+        print("[too much history to show in full: the oldest turns were dropped]")
         body = body[-BUDGET:]
     print(body)
 

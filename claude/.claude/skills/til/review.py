@@ -45,6 +45,30 @@ class Review:
         self.notes = [""] * len(self.items)
         self.cur = 0
         self.message = ""
+        self.progress_path = spec.get("_progress_path")
+        self.restore()
+
+    def restore(self):
+        try:
+            with open(self.progress_path) as f:
+                saved = {r["id"]: r for r in json.load(f)}
+        except (OSError, ValueError, TypeError, KeyError):
+            return
+        for i, item in enumerate(self.items):
+            r = saved.get(item["id"])
+            if r and r.get("decision") in ("accept", "reject", "note"):
+                self.decisions[i], self.notes[i] = r["decision"], r.get("note", "")
+        if any(self.decisions):
+            self.message = "restored your earlier decisions"
+            if self.decisions[self.cur]:
+                self.advance()
+
+    def remember(self):
+        if self.progress_path:
+            try:
+                write_json(self.progress_path, self.result("partial")["results"])
+            except OSError:
+                pass
 
     def put(self, y, x, s, attr=0):
         h, w = self.scr.getmaxyx()
@@ -216,6 +240,7 @@ class Review:
         while True:
             self.draw()
             self.message = ""
+            self.remember()
             try:
                 ch = self.scr.get_wch()
             except curses.error:
@@ -228,7 +253,10 @@ class Review:
                 self.advance()
             elif ch == "n":
                 note = self.read_line("note › ", self.notes[self.cur])
-                if note:
+                if note and note.lower() in ("a", "r"):
+                    self.decisions[self.cur] = "accept" if note.lower() == "a" else "reject"
+                    self.advance()
+                elif note:
                     self.notes[self.cur] = note
                     self.decisions[self.cur] = "note"
                     self.advance()
@@ -254,6 +282,7 @@ def tui(items_path, out_path):
     os.environ.setdefault("ESCDELAY", "25")
     with open(items_path) as f:
         spec = json.load(f)
+    spec["_progress_path"] = items_path + ".progress"
 
     def main(scr):
         curses.curs_set(0)
@@ -303,6 +332,11 @@ def launch(items_path, resume):
             return 0
         if os.path.exists(out_path):
             os.remove(out_path)
+        if "--fresh" in sys.argv:
+            try:
+                os.remove(items_path + ".progress")
+            except OSError:
+                pass
         try:
             spawn = subprocess.run(
                 ["wezterm", "cli", "spawn", "--new-window", "--cwd", os.path.dirname(items_path),
@@ -328,7 +362,13 @@ def launch(items_path, resume):
     while time.monotonic() < deadline:
         if os.path.exists(out_path):
             with open(out_path) as f:
-                print(f.read())
+                result = f.read()
+            if '"submitted"' in result or '"aborted"' in result:
+                try:
+                    os.remove(items_path + ".progress")
+                except OSError:
+                    pass
+            print(result)
             return 0
         if not pane_alive(pane_id):
             time.sleep(0.3)
