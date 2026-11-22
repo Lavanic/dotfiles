@@ -16,6 +16,7 @@ id is written to cards.jsonl.
 """
 
 import datetime as dt
+import fcntl
 import glob
 import html
 import json
@@ -163,6 +164,8 @@ def read_jsonl(path):
                     rows.append(json.loads(line))
     except OSError:
         pass
+    except ValueError as e:
+        fail(f"{path} has a line that is not valid JSON ({e}); fix it by hand first")
     return rows
 
 
@@ -198,17 +201,15 @@ def cmd_state():
 
 
 def cmd_save(path, dry):
-    with open(path) as f:
-        spec = json.load(f)
-    check_repo()
+    spec = load_spec(path, "accepted")
     synced = "skipped" if dry else pull()
 
     known = categories()
     existing = [t["text"] for t in saved_tils()]
     saved, skipped = [], []
     for item in spec.get("accepted", []):
-        text = one_line(item["text"])
-        category = canonical(item["category"], known)
+        text = one_line(item.get("text", ""))
+        category = canonical(item.get("category", ""), known)
         if not text:
             continue
         twin = is_duplicate(text, existing)
@@ -261,7 +262,7 @@ def remember_rejected(items):
     rows = read_jsonl(rejected_path())
     seen = {norm(r["text"]) for r in rows}
     for item in items:
-        text = one_line(item["text"])
+        text = one_line(item.get("text", ""))
         if text and norm(text) not in seen:
             rows.append({"date": dt.date.today().isoformat(),
                          "category": one_line(item.get("category", "")), "text": text})
@@ -417,8 +418,10 @@ def flush(cards):
                 model, fields = note_for(card)
                 by_model.setdefault(model, []).append((card, fields))
             for model, pairs in by_model.items():
+                names = anki("model_field_names", model_name=model).get("field_names", [])
                 reply = anki("add_notes", deck_name=deck, model_name=model, tags=["til"],
-                             notes=[{"fields": fields} for _, fields in pairs])
+                             notes=[{"fields": {**dict.fromkeys(names, ""), **fields}}
+                                    for _, fields in pairs])
                 for entry in reply.get("results", []):
                     card = pairs[entry["index"]][0]
                     if entry.get("status") == "created" and entry.get("note_id"):
@@ -439,20 +442,18 @@ def flush(cards):
 
 
 def cmd_cards(path, dry):
-    check_repo()
     cards_path = os.path.join(REPO, "cards.jsonl")
     new, skipped = [], []
     if path:
-        with open(path) as f:
-            spec = json.load(f)
+        spec = load_spec(path, "cards")
         if not dry:
             pull()
         cards = read_jsonl(cards_path)
         seen = {(c["deck"], norm(c["front"])) for c in cards}
         known = categories()
         for item in spec.get("cards", []):
-            deck = f"TIL::{canonical(item['category'], known)}"
-            front, back = one_line(item["front"]), one_line(item["back"])
+            deck = f"TIL::{canonical(item.get('category', ''), known)}"
+            front, back = one_line(item.get("front", "")), one_line(item.get("back", ""))
             if not front or not back:
                 continue
             if (deck, norm(front)) in seen:
@@ -490,17 +491,43 @@ def cmd_cards(path, dry):
     print(json.dumps(result, indent=1, ensure_ascii=False))
 
 
+def load_spec(path, key):
+    try:
+        with open(path) as f:
+            spec = json.load(f)
+    except (OSError, ValueError) as e:
+        fail(f"cannot read {path}: {e}")
+    if not isinstance(spec, dict) or not isinstance(spec.get(key, []), list):
+        fail(f'{path} must be an object with a "{key}" list')
+    for name in (key, "rejected"):
+        for item in spec.get(name, []):
+            if not isinstance(item, dict):
+                fail(f"{path}: every entry in {name} must be an object")
+    return spec
+
+
+def locked(run):
+    """One writer at a time, so two /til runs cannot interleave git or cards.jsonl."""
+    check_repo()
+    with open(os.path.join(REPO, ".git", "til.lock"), "w") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            fail("another /til run is writing to the til repo; try again in a moment")
+        run()
+
+
 def main():
     args = [a for a in sys.argv[1:] if a != "--dry"]
     dry = "--dry" in sys.argv[1:]
     if args == ["state"]:
         cmd_state()
     elif len(args) == 2 and args[0] == "save":
-        cmd_save(args[1], dry)
+        locked(lambda: cmd_save(args[1], dry))
     elif len(args) == 2 and args[0] == "cards":
-        cmd_cards(args[1], dry)
+        locked(lambda: cmd_cards(args[1], dry))
     elif args == ["flush"]:
-        cmd_cards(None, False)
+        locked(lambda: cmd_cards(None, False))
     else:
         sys.exit(__doc__)
 

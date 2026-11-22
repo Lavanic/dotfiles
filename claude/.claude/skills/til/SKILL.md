@@ -21,11 +21,12 @@ scripts are what make a repeated run safe.
 - `review.py FILE`: the review window.
 - `store.py save FILE` / `store.py cards FILE` / `store.py flush`: the til
   repo (`/home/oliverohrt/Documents/PROJECTS/til`, private) and Anki.
-- `sweep.py REPO`: text of today's Claude Code sessions.
+- `sweep.py REPO`: text of today's Claude Code sessions, and the `^word`
+  flags he planted.
 
 If the arguments include `dry`, this is a rehearsal: do the gather, pitch and
 both review rounds for real, pass `--dry` to `store.py save` and
-`store.py cards`, skip `sweep.py --mark`, and show what each would have
+`store.py cards`, skip `sweep.py --mark` and the flag commands, and show what each would have
 written. `dry` combines with `day`.
 
 ## Current state
@@ -40,14 +41,49 @@ written. `dry` combines with `day`.
   and use its output together with this conversation. It prints every Claude
   Code session since the last sweep (or since midnight).
 
+He runs this several times a day. Each run only needs to cover what is new
+since the last one; a run with one TIL, or none, is fine.
+
+In both modes, also run
+`python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til --flags`.
+A flag is a word or phrase he prefixed with `^` while talking
+(`^erroneously`, `^ping`, `^"certificate pinning"`) to say "I want this as a
+TIL". The output lists each open flag with what he said and what Claude had
+just said, from every session of the last 90 days on this machine.
+
+Every open flag gets a pitch, built from that context: a flagged English
+word becomes a Vocabulary TIL, a flagged command or topic becomes a TIL
+about how it came up. Fix his spelling of the word in the pitch, but keep
+the flag's own spelling for the commands in step 4. If the context is not
+enough to tell what he meant, pitch your best reading; the review is where
+he corrects it. A flag marked "rejected once already" needs a different
+reading than last time. Put `"flag": "flagged"` on these items so he can see
+which pitches came from a flag.
+
 ## 2. Pitch
 
-Pick at most 5 TILs. Things that qualify: a command or flag he used or asked
-about, a concept that got explained, a mistake and its cause, a term or word
-he did not know. Include one or two simple ones (a definition, a unit, what a
-flag stands for) when the session leaned on them. Skip anything specific to
-one project's code, and anything he clearly already knew. Never put a
-secret, token, password or someone else's personal detail in a TIL.
+There is no fixed number. Pitch every flag, plus whatever else clears the
+bar below, and nothing that does not.
+
+The bar is what he engaged with, not what Claude said. Good sources, best
+first:
+
+1. Flags.
+2. A moment where he was surprised or had something wrong ("wait, Mbps is
+   not megabytes?").
+3. A question he asked and the plain answer to it.
+4. A command he typed himself, or a word he used or asked about.
+
+Not sources: things Claude diagnosed, fixed or mentioned in passing while he
+was focused on something else. If he never reacted to it, he did not learn
+it, and pitching it reads as noise. Tooling internals, version-specific
+breakage and root-cause write-ups almost never qualify.
+
+Each TIL is one idea at the level he would explain to a friend. If it needs
+two technical terms he has not used himself, it is too deep: either pitch
+the simpler idea underneath it or drop it. Skip anything specific to one
+project's code, and anything he clearly already knew. Never put a secret,
+token, password or someone else's personal detail in a TIL.
 
 Do not pitch anything that is already under "Saved TILs" or "Rejected
 before" above, including the same fact in different words. The list shows
@@ -74,8 +110,18 @@ summary sentence at the end.
 
 Category: reuse one from the list above whenever it fits. Create a new one
 only when nothing fits, name it in Title Case, and set `"flag": "new category"`
-on the item so he sees it. A new English word goes in `Vocabulary`, written
-as `Vocabulary: nebulous means vague or not well-defined. Ex. ...`.
+on the item so he sees it (a flagged item in a new category gets
+`"flag": "flagged, new category"`). A new English word goes in `Vocabulary`, in three short
+parts: a plain definition of a few words, an everyday example sentence, and
+a brief origin with the root's meaning.
+
+> Vocabulary: rationalize means to make excuses that sound reasonable. Ex.
+> He rationalized buying the car as an investment. From Latin ratio,
+> "reason".
+
+Keep vocabulary brief. The example is about ordinary life (a package, a
+car, a friend), never about this session, his projects or tech he was
+working on. Always include the origin.
 
 ## 3. Review
 
@@ -95,12 +141,17 @@ Run `python3 ~/.claude/skills/til/review.py <file>` with a Bash timeout of
 {"status": "submitted", "results": [{"id": "1", "decision": "accept", "note": ""}]}
 ```
 
+- A note of just `a` or `r` is a slip (he hit n first): treat it as accept
+  or reject.
 - `submitted`: act on the decisions. `accept` keeps the item, `reject` drops
   it, `note` means rewrite it following the note. Put only the rewritten
   items in a new file and run the review again. After three rounds on the
   same item, drop it and say so.
 - `pending`: he is still deciding. Run again with `--resume` after the file.
-- `aborted` or `closed`: he backed out. Save nothing, say so, stop.
+- `aborted` or `closed`: he backed out. Save nothing, say so, stop. If the
+  result still lists every item as `reject`, he disliked the batch: run
+  `store.py save` with only the `rejected` list so they are not pitched
+  again, and ask what was off.
 - `error` or exit code 3: the window could not open. Fall back to
   AskUserQuestion, one question per item with Accept and Reject options (his
   free-text answer is the note).
@@ -127,8 +178,17 @@ networking TILs`) and pushes. Read its JSON:
   so and carry on.
 - `ok: false`: stop and show him the error. Do not repair the repo yourself.
 
-For `day` runs, once the save succeeded (even with nothing new), run
-`python3 ~/.claude/skills/til/sweep.py /home/oliverohrt/Documents/PROJECTS/til --mark`.
+Once the save succeeded (even with nothing new), settle the flags that were
+in this review, using each flag's term as `--flags` printed it:
+
+- `sweep.py <repo> --flags-done TERM...` for flags whose pitch he accepted,
+  including ones `save` skipped as already saved.
+- `sweep.py <repo> --flags-rejected TERM...` for flags whose pitch he
+  rejected. The first rejection keeps the flag open for one more try.
+
+Quote a multi-word term as one argument. For `day` runs also run
+`sweep.py <repo> --mark`. Skip all three after an aborted review or a dry
+run, so nothing is lost.
 
 ## 5. Anki cards
 
