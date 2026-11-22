@@ -311,38 +311,61 @@ def anki_up():
         return True
 
 
+def start_anki(hidden, wait):
+    """Start Anki and wait for its MCP server. Hidden means Qt's offscreen
+    platform: Anki runs normally but draws no window, so nothing pops up."""
+    env = dict(os.environ)
+    if hidden:
+        env["QT_QPA_PLATFORM"] = "offscreen"
+    proc = subprocess.Popen(["anki"], env=env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL, start_new_session=True)
+    deadline = time.monotonic() + wait
+    while time.monotonic() < deadline and proc.poll() is None:
+        if anki_up():
+            time.sleep(1.5)
+            return proc, True
+        time.sleep(1)
+    return proc, False
+
+
 def ensure_anki():
     """Returns (reachable, process we started or None, problem)."""
     if anki_up():
         return True, None, ""
-    running = subprocess.run(["pgrep", "-x", "anki"], capture_output=True).returncode == 0
-    proc = None
-    if not running:
-        if not shutil.which("anki"):
-            return False, None, "anki is not installed"
-        proc = subprocess.Popen(["anki"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                                stderr=subprocess.DEVNULL, start_new_session=True)
-    deadline = time.monotonic() + (60 if proc else 15)
-    while time.monotonic() < deadline:
-        if anki_up():
-            time.sleep(1.5)
-            return True, proc, ""
-        if proc and proc.poll() is not None:
-            return False, None, "Anki exited right after starting"
-        time.sleep(1)
-    why = ("Anki did not finish starting (profile picker or a dialog may be open)" if proc
-           else "Anki is open but its MCP add-on is not answering on " + ANKI_URL)
-    return False, proc, why
+    if subprocess.run(["pgrep", "-x", "anki"], capture_output=True).returncode == 0:
+        deadline = time.monotonic() + 15
+        while time.monotonic() < deadline:
+            if anki_up():
+                return True, None, ""
+            time.sleep(1)
+        return False, None, "Anki is open but its MCP add-on is not answering on " + ANKI_URL
+    if not shutil.which("anki"):
+        return False, None, "anki is not installed"
+    proc, up = start_anki(hidden=True, wait=30)
+    if up:
+        return True, proc, ""
+    close_anki(proc)
+    proc, up = start_anki(hidden=False, wait=60)
+    if up:
+        return True, proc, ""
+    return False, proc, "Anki did not finish starting (profile picker or a dialog may be open)"
 
 
 def close_anki(proc):
     """Ask an Anki we started to quit the normal way (it saves and syncs on
     exit like a click on the close button). Never touches one he opened."""
     try:
-        os.killpg(proc.pid, signal.SIGTERM)
+        if proc.poll() is None:
+            os.killpg(proc.pid, signal.SIGTERM)
         proc.wait(timeout=90)
         return True
-    except (OSError, subprocess.TimeoutExpired):
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except OSError:
+            pass
+        return False
+    except OSError:
         return False
 
 

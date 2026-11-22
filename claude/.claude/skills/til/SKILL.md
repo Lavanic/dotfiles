@@ -276,8 +276,9 @@ with AnkiWeb. Read its JSON:
 - `anki.still_queued` above 0: Anki could not be reached or refused a card;
   `anki.errors` says why. The cards stay queued and go in on the next run.
   Report it, do not retry in a loop.
-- `anki.anki_started: true`: the script opened Anki itself and closes it
-  again when done (`anki_closed: true`). Mention it only if `anki_closed`
+- `anki.anki_started: true`: the script opened Anki itself, with no window
+  so nothing pops up on his screen, and closes it again when done
+  (`anki_closed: true`). Mention it only if `anki_closed`
   is false, since then Anki is still open. An Anki he had open is never
   closed.
 - `anki.sync` starting with `conflict` or `error`: relay it once. Never
